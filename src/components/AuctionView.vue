@@ -14,8 +14,9 @@
         </tr>
     </div>
     <div class="bid_offer_box">
-      <input type="text" id="new_offer" style="margin-top:15px; vertical-align:middle; text-align:center; width:50%;">
-      <input type="submit" v-on:click="add_new_bid" value="Licytuj" style="float: right; margin-top:15px; margin-right:5px; width:20%" />
+      <input type="text" id="new_offer" style="margin-top:15px; vertical-align:middle; text-align:center; width:40%;">
+      <input type="submit" v-on:click="validate_input" value="Licytuj" style="float: right; margin-top:15px; margin-right:5px; width:35%" />
+      <div class="validation_message" id="validation_message"></div>
     </div>
     <div class="bid_offer_box" v-for="bid in result.Bids.L" v-bind:key="bid.M.Offer.N">
       <h3>{{bid.M.Offer.N}}</h3>
@@ -48,9 +49,20 @@ export default {
     },
     methods : {
       add_new_bid : function (event) {
-        console.warn();
         Vue.axios.put('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/auction/' + this.$route.params.id + '/bid', {'userId': 4, 'bid': document.getElementById('new_offer').value});
         location.reload();
+      },
+      validate_input : function (event) {
+        this.input = document.getElementById('new_offer').value;
+        if (isNaN(this.input) || this.input < 0) //todo validate minimum bid 
+        {
+          alert("Proszę wpisać liczbę większą od 0");
+          document.getElementById('new_offer').style["border"] = "2px solid red";
+        }
+        else
+        {
+          this.add_new_bid();
+        }
       }
     }
 }
@@ -85,6 +97,10 @@ export default {
   width: 15%;
   height: 50px;
   float: left;
+}
+.validation_message {
+  font-size: 10px;
+  color: red;
 }
 #app img {
   border-radius: 30px;
