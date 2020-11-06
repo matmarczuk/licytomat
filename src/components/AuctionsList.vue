@@ -9,7 +9,7 @@
                     <router-link :to="{ name: 'AuctionView', params:{ id:`${item.AuctionId.S}`} }">{{item.Name.S}}</router-link>           
                     </td>
                     <td valign="middle" width="150">
-                        <h3>Aktualna cena : {{item.StartBid.S}} zł</h3>
+                        <h3>Aktualna cena <br/> {{item.Bids.L[0].M.Offer.N}} zł</h3>
                     </td>
                 </tr>
       </div>
