@@ -19,7 +19,7 @@
       <div class="validation_message" id="validation_message"></div>
     </div>
     <div class="bid_offer_box" v-for="bid in result.Bids.L" v-bind:key="bid.M.Offer.N">
-      <h3>{{bid.M.Offer.N}}</h3>
+      <h3>{{bid.M.Offer.N}} zł</h3>
     </div>
   </div>
 </template>
