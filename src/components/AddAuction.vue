@@ -1,10 +1,10 @@
 <template>    
     <div class="add_auction">
-      <form v-on:submit="add_new_auction" id="add_new_form">
-        <input style="width:80%; margin: 10px;" type="text" placeholder="Nazwa przedmiotu/usługi na licytację" id="auction_name" required> <br>
-        <input type="text" placeholder="Opis" id="auction_description" required> <br>
+      <form id="add_new_form" @submit.prevent="add_new_auction">
+        <input style="width:80%; margin: 10px;" type="text" v-model="auctionItem.name" placeholder="Nazwa przedmiotu/usługi na licytację" id="auction_name" required> <br>
+        <input type="text" v-model="auctionItem.description" placeholder="Opis" id="auction_description" required> <br>
         <label>Kategoria</label>
-        <select style="margin: 10px;">
+        <select style="margin: 10px;" v-model="auctionItem.category">
           <option>AGD</option>
           <option>Zabawki</option>
           <option>Książki</option>
@@ -12,12 +12,14 @@
           <option>Usługi</option>
         </select> <br>
         <label>Data zakończenia</label>
-        <input type="date" id="auction_end" style="margin: 10px;"><br>
+        <input type="date" v-model="auctionItem.endDate" id="auction_end" style="margin: 10px;"><br>
         <label>Miejscowość</label>
-        <input type="text" style="margin: 10px;" placeholder="Miasto"> <br>
+        <input type="text" v-model="auctionItem.city" style="margin: 10px;" placeholder="Miasto"> <br>
+        <input type="file" v-on:change="handle_file_upload" id="img" ref="file" accept="image/*">
         <label>Cena startowa</label>
         <input style="margin: 10px;" type="number" placeholder="Cena startowa" id="auction_initial_price" step="5" required> <br>
         <button style="width:30%; margin: 10px; height:50px;" type="submit" id="add_auction_button">Dodaj</button>
+        {{imgToken.fields}}
       </form>
     </div>
      
@@ -31,6 +33,19 @@ import VueAxios from 'vue-axios';
 Vue.use(VueAxios,axios)
 export default {
     name: "AddAuction",
+    data () {
+      return {
+        auctionItem : {
+          name : '',
+          description: '',
+          category: '',
+          endDate: '',
+          city: '',
+          image: ''
+        },
+        imgToken : '',
+      }
+    },
     mounted() {
       const today = new Date()
       const in3days = new Date(today)
@@ -41,9 +56,46 @@ export default {
       auction_end.min = tomorrow.toISOString().split('T')[0]
     },
     methods : {
-      add_new_auction : function (event) {
-        name = document.getElementById("add_new_form").elements;
-        console.log(name['name']);
+      async add_new_auction (event) {
+        await Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/image/url/' + '?imgType=' + this.auctionItem.image.name.split('.').pop())
+        .then((resp)=>{
+            this.imgToken = resp.data;
+        })
+        let formData = new FormData();
+        Object.keys(this.imgToken.fields).forEach(key => {
+          formData.append(key, this.imgToken.fields[key]);
+        });
+        formData.append('file',this.auctionItem.image);
+        console.log(this.imgToken)
+
+        axios({
+          method: 'POST',
+          url: this.imgToken.url,
+          data: formData,
+          headers: {'Content-Type': 'multipart/form-data' }
+          })
+          .then(function (response) {
+              //handle success
+              console.log(response);
+          })
+          .catch(function (response) {
+              //handle error
+              console.log(response);
+          });
+        // this.$router.push({ name: 'AuctionsList' })
+      },
+      get_preasign_image_url : function (event) {
+        return Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/image/url')
+        .then((resp)=>{
+            console.log("to jest w środku" + resp.data.body);
+        })
+        .catch((error) => {
+          console.warn('erros : ',error);
+        })  
+      },
+      handle_file_upload : function () {
+        this.auctionItem.image = this.$refs.file.files[0];
+        console.log(this.auctionItem.image);
       }
     }
 }

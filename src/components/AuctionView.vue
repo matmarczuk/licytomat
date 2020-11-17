@@ -35,17 +35,18 @@ export default {
     props: {'AuctionId': String},
     data()
     {
-        return {result:undefined}
+      return {result:undefined}
     },
     mounted()
-    {   console.warn(this.AuctionId)
-        Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/auction/' + this.$route.params.id)
-        .then((resp)=>{
-            console.warn(resp);
-            this.result = resp.data.Item;
-            this.bids = this.result.Bids.L.sort((a,b) => (Number(a.M.Offer.N) < Number(b.M.Offer.N)) ? 1 : -1);
-            console.warn(this.bids)
-        })
+    {   
+      console.warn(this.AuctionId)
+      Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/auction/' + this.$route.params.id)
+      .then((resp)=>{
+          console.warn(resp);
+          this.result = resp.data.Item;
+          this.bids = this.result.Bids.L.sort((a,b) => (Number(a.M.Offer.N) < Number(b.M.Offer.N)) ? 1 : -1);
+          console.warn(this.bids)
+      })
     },
     methods : {
       add_new_bid : function (event) {
