@@ -2,7 +2,7 @@
     <div class="add_auction">
       <form id="add_new_form" @submit.prevent="add_new_auction">
         <input style="width:80%; margin: 10px;" type="text" v-model="auctionItem.name" placeholder="Nazwa przedmiotu/usługi na licytację" id="auction_name" required> <br>
-        <input type="text" v-model="auctionItem.description" placeholder="Opis" id="auction_description" required> <br>
+        <input type="text" v-model="auctionItem.desc" placeholder="Opis" id="auction_description" required> <br>
         <label>Kategoria</label>
         <select style="margin: 10px;" v-model="auctionItem.category">
           <option>AGD</option>
@@ -12,14 +12,13 @@
           <option>Usługi</option>
         </select> <br>
         <label>Data zakończenia</label>
-        <input type="date" v-model="auctionItem.endDate" id="auction_end" style="margin: 10px;"><br>
+        <input type="date" v-model="auctionItem.end_date" id="auction_end" style="margin: 10px;"><br>
         <label>Miejscowość</label>
         <input type="text" v-model="auctionItem.city" style="margin: 10px;" placeholder="Miasto"> <br>
         <input type="file" v-on:change="handle_file_upload" id="img" ref="file" accept="image/*">
         <label>Cena startowa</label>
-        <input style="margin: 10px;" type="number" placeholder="Cena startowa" id="auction_initial_price" step="5" required> <br>
+        <input style="margin: 10px;" type="number"  v-model="auctionItem.start_bid" placeholder="Cena startowa" id="auction_initial_price" step="5" required> <br>
         <button style="width:30%; margin: 10px; height:50px;" type="submit" id="add_auction_button">Dodaj</button>
-        {{imgToken.fields}}
       </form>
     </div>
      
@@ -37,10 +36,11 @@ export default {
       return {
         auctionItem : {
           name : '',
-          description: '',
+          desc: '',
           category: '',
-          endDate: '',
+          end_date: '',
           city: '',
+          start_bid: '',
           image: ''
         },
         imgToken : '',
@@ -57,32 +57,45 @@ export default {
     },
     methods : {
       async add_new_auction (event) {
-        await Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/image/url/' + '?imgType=' + this.auctionItem.image.name.split('.').pop())
-        .then((resp)=>{
-            this.imgToken = resp.data;
-        })
-        let formData = new FormData();
-        Object.keys(this.imgToken.fields).forEach(key => {
-          formData.append(key, this.imgToken.fields[key]);
-        });
-        formData.append('file',this.auctionItem.image);
-        console.log(this.imgToken)
-
-        axios({
-          method: 'POST',
-          url: this.imgToken.url,
-          data: formData,
-          headers: {'Content-Type': 'multipart/form-data' }
+        if(this.auctionItem.image) {
+          await Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/image/url/' + '?imgType=' + this.auctionItem.image.name.split('.').pop())
+          .then((resp)=>{
+              this.imgToken = resp.data;
           })
-          .then(function (response) {
-              //handle success
-              console.log(response);
-          })
-          .catch(function (response) {
-              //handle error
-              console.log(response);
+          let formData = new FormData();
+          Object.keys(this.imgToken.fields).forEach(key => {
+            formData.append(key, this.imgToken.fields[key]);
           });
+          formData.append('file',this.auctionItem.image);
+          console.log(this.imgToken)
+
+          await Vue.axios({
+            method: 'POST',
+            url: this.imgToken.url,
+            data: formData,
+            headers: {'Content-Type': 'multipart/form-data' }
+            })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+            this.auctionItem.image=this.imgToken.url + this.imgToken.fields.key;
+        }
+          await Vue.axios.put('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/auction',
+          this.auctionItem)
+          .then((response)=> {
+            console.log("odpowiedz");
+            console.log(response);
+          })
+
+
         // this.$router.push({ name: 'AuctionsList' })
+      
+
       },
       get_preasign_image_url : function (event) {
         return Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/image/url')
