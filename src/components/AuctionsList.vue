@@ -1,12 +1,12 @@
 <template>    
     <div id="app">
-            <div class="box" v-for="item in result" v-bind:key="item.id">
+            <div class="box" v-for="item in result" v-bind:key="item.Id">
                 <tr style="width:100%; display:table;">
                     <td width="150">
                         <img :src="item.Images.L[0].S" alt="alternatetext" height="150px"/>
                     </td>
                     <td valign="middle" style="text-align: left; padding-left: 15px;">
-                    <router-link :to="{ name: 'AuctionView', params:{ id:`${item.AuctionId.S}`} }">{{item.Name.S}}</router-link>           
+                    <router-link :to="{ name: 'AuctionView', params:{ id:`${item.Id.S}`} }">{{item.Name.S}}</router-link>           
                     </td>
                     <td valign="middle" width="150">
                         <h3>Aktualna cena <br/> {{item.Bids.L[0].M.Offer.N}} zł</h3>
@@ -21,20 +21,22 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import {API_ADDR, API_STAGE} from '../variables.js';
 
 Vue.use(VueAxios,axios)
 export default {
     name: "AuctionsList",
+    props: {'aim': String},
     data()
     {
         return {result:undefined}
     },
     mounted()
-    {
-        Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/auctions')
+    { 
+      Vue.axios.get(API_ADDR + API_STAGE + '/' + 'Kubus' + '/auctions')
         .then((resp)=>{
-            this.result = resp.data.body.Items
-            console.warn(resp.data.body)
+            console.log(API_ADDR + API_STAGE + '/' + 'Kubus' + '/auctions');
+            this.result = resp.data.Items
         })
     }
 }

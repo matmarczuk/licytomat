@@ -15,15 +15,16 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/auctions',
+      path: '/:aim/auctions',
       name: 'AuctionsList',
-      component: AuctionsList
+      component: AuctionsList,
+      props: true
     },
     {
       path: '/auction/:id',
       name: 'AuctionView',
       component: AuctionView,
-      props: route => ({ AuctionId: route.query.q })
+      props: route => ({ aim: route.query.aim })
     },
     {
       path: '/add',

@@ -28,30 +28,41 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import {API_ADDR, API_STAGE} from '../variables.js';
 
 Vue.use(VueAxios,axios)
 export default {
     name: "AuctionView",
-    props: {'AuctionId': String},
+    props: {'aim': String},
     data()
     {
       return {result:undefined}
     },
     mounted()
-    {   
-      console.warn(this.AuctionId)
-      Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/auction/' + this.$route.params.id)
-      .then((resp)=>{
-          console.warn(resp);
-          this.result = resp.data.Item;
-          this.bids = this.result.Bids.L.sort((a,b) => (Number(a.M.Offer.N) < Number(b.M.Offer.N)) ? 1 : -1);
-          console.warn(this.bids)
-      })
+    { 
+      this.get_auction_details()
     },
     methods : {
-      add_new_bid : function (event) {
-        Vue.axios.put('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/auction/' + this.$route.params.id + '/bid', {'userId': 4, 'bid': document.getElementById('new_offer').value});
-        location.reload();
+      async get_auction_details (event) {
+        Vue.axios.get(API_ADDR + API_STAGE + '/auction/' + this.$route.params.id)
+        .then((resp)=>{
+            console.warn(resp);
+            this.result = resp.data;
+            this.bids = this.result.Bids.L.sort((a,b) => (Number(a.M.Offer.N) < Number(b.M.Offer.N)) ? 1 : -1);
+            console.warn(this.bids)
+        })
+      },
+      async add_new_bid (event) {
+        await Vue.axios.put(API_ADDR + API_STAGE + '/auction/' + this.$route.params.id + '/bid', {'aim': this.result.Aim.S,'userId': 4, 'bid': document.getElementById('new_offer').value})
+        .then((resp)=>{
+          console.log("Response z put" + resp);
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response);
+        });
+        this.get_auction_details();
+        this.$forceUpdate();
       },
       validate_input : function (event) {
         this.input = document.getElementById('new_offer').value;
@@ -86,6 +97,7 @@ export default {
   margin: 10px;
   margin-left: 30px;
   width: 70%;
+  min-width: 50%;
   height: 600px;
   float: left;
 }

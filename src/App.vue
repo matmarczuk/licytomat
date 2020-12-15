@@ -5,8 +5,22 @@
 </template>
 
 <script>
+import { mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+      mdbNavbar,
+      mdbNavbarBrand,
+      mdbNavbarToggler,
+      mdbNavbarNav,
+      mdbNavItem,
+      mdbDropdown,
+      mdbDropdownMenu,
+      mdbDropdownToggle,
+      mdbDropdownItem,
+      mdbInput
+    }
 }
 </script>
 
@@ -17,6 +31,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
