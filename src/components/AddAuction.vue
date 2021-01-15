@@ -36,6 +36,7 @@ export default {
     data () {
       return {
         auctionItem : {
+          aim: '',
           name : '',
           desc: '',
           category: '',
@@ -59,7 +60,7 @@ export default {
     methods : {
       async add_new_auction (event) {
         if(this.auctionItem.image) {
-          await Vue.axios.get(API_ADDR + API_STAGE + '/image/url/' + '?imgType=' + this.auctionItem.image.name.split('.').pop())
+          await Vue.axios.get(API_ADDR + API_STAGE + '/auction/image/url' + '?imgType=' + this.auctionItem.image.name.split('.').pop())
           .then((resp)=>{
               this.imgToken = resp.data;
           })
@@ -86,12 +87,13 @@ export default {
             });
             this.auctionItem.image=this.imgToken.url + this.imgToken.fields.key;
         }
-          await Vue.axios.put('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/auction',
-          this.auctionItem)
-          .then((response)=> {
-            console.log("odpowiedz");
-            console.log(response);
-          })
+        this.auctionItem.aim = 'Kubus'
+        await Vue.axios.put(API_ADDR + API_STAGE + '/auction',
+        this.auctionItem)
+        .then((response)=> {
+          console.log("odpowiedz");
+          console.log(response);
+        })
 
 
         this.$router.push({ name: 'AuctionsList' })

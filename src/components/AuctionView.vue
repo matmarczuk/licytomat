@@ -11,8 +11,10 @@
             </td>
         </tr>
         <tr valign="top">
+          ok
         </tr>
     </div>
+    <h2 style="text-align: left;">Oferty</h2>
     <div class="bid_offer_box">
       <input type="text" id="new_offer" style="margin-top:15px; vertical-align:middle; text-align:center; width:40%;">
       <input type="submit" v-on:click="validate_input" value="Licytuj" style="float: right; margin-top:15px; margin-right:5px; width:35%" />
@@ -20,6 +22,10 @@
     </div>
     <div class="bid_offer_box" v-for="bid in result.Bids.L" v-bind:key="bid.M.Offer.N">
       <h3>{{bid.M.Offer.N}} zł</h3>
+    </div>
+    <div class="bid_offer_box" style="height:80px;">
+      Oferta początkowa
+      <h3>{{this.result.StartBid.N}} zł</h3>
     </div>
   </div>
 </template>
@@ -82,7 +88,7 @@ export default {
 </script>
 
 <style>
-    html, body {
+html, body {
   height: 100%;
   padding-top: 10px;
   background: #01741a;
