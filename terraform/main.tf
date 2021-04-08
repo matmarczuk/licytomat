@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 terraform {
-    required_version = ">= 0.12"
+    required_version = ">= 0.14.7"
     backend "s3" {
         key    = "terraform.tfstate"
     }
