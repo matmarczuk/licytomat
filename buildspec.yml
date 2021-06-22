@@ -24,7 +24,6 @@ phases:
   build:
     commands:
       - terraform apply -auto-approve
-      - bucket_name=$(terraform output s3_bucket_name)
       - cd ../frontend
       - npm install
       - npm run build
