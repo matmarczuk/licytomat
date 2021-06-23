@@ -25,7 +25,9 @@ phases:
     commands:
       - terraform apply -auto-approve
       - bucket_name=$(terraform output -raw s3_bucket_name)
+      - API_url=$(terraform output API_url)
       - cd ../frontend
+      - echo "export const API_ADDR = ${API_url}" > ./src/variables.js
       - npm install
       - npm run build
       - echo ""

@@ -28,7 +28,7 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import {API_ADDR, API_STAGE} from '../variables.js';
+import {API_ADDR} from '../variables.js';
 
 Vue.use(VueAxios,axios)
 export default {
@@ -60,7 +60,7 @@ export default {
     methods : {
       async add_new_auction (event) {
         if(this.auctionItem.image) {
-          await Vue.axios.get(API_ADDR + API_STAGE + '/auction/image/url' + '?imgType=' + this.auctionItem.image.name.split('.').pop())
+          await Vue.axios.get(API_ADDR+ '/auction/image/url' + '?imgType=' + this.auctionItem.image.name.split('.').pop())
           .then((resp)=>{
               this.imgToken = resp.data;
           })
@@ -88,7 +88,7 @@ export default {
             this.auctionItem.image=this.imgToken.url + this.imgToken.fields.key;
         }
         this.auctionItem.aim = 'Kubus'
-        await Vue.axios.put(API_ADDR + API_STAGE + '/auction',
+        await Vue.axios.put(API_ADDR + '/auction',
         this.auctionItem)
         .then((response)=> {
           console.log("odpowiedz");

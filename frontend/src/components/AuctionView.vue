@@ -34,7 +34,7 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import {API_ADDR, API_STAGE} from '../variables.js';
+import {API_ADDR} from '../variables.js';
 
 Vue.use(VueAxios,axios)
 export default {
@@ -50,7 +50,7 @@ export default {
     },
     methods : {
       async get_auction_details (event) {
-        Vue.axios.get(API_ADDR + API_STAGE + '/auction/' + this.$route.params.id)
+        Vue.axios.get(API_ADDR + '/auction/' + this.$route.params.id)
         .then((resp)=>{
             console.warn(resp);
             this.result = resp.data;
@@ -59,7 +59,7 @@ export default {
         })
       },
       async add_new_bid (event) {
-        await Vue.axios.put(API_ADDR + API_STAGE + '/auction/' + this.$route.params.id + '/bid', {'aim': this.result.Aim.S,'userId': 4, 'bid': document.getElementById('new_offer').value})
+        await Vue.axios.put(API_ADDR + '/auction/' + this.$route.params.id + '/bid', {'aim': this.result.Aim.S,'userId': 4, 'bid': document.getElementById('new_offer').value})
         .then((resp)=>{
           console.log("Response z put" + resp);
         })

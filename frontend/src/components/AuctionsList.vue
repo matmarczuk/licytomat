@@ -21,9 +21,9 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import {API_ADDR, API_STAGE} from '../variables.js';
+import {API_ADDR} from '../variables.js';
 
-Vue.use(VueAxios,axios)
+//Vue.use(VueAxios,axios)
 export default {
     name: "AuctionsList",
     props: {'aim': String},
@@ -33,10 +33,10 @@ export default {
     },
     mounted()
     { 
-      Vue.axios.get(API_ADDR + API_STAGE + '/' + 'Kubus' + '/auctions')
+      Vue.axios.get(API_ADDR + '/' + this.aim + '/auctions')
         .then((resp)=>{
-            console.log(API_ADDR + API_STAGE + '/' + 'Kubus' + '/auctions');
             this.result = resp.data.Items
+            console.log(this.result);
         })
     }
 }
