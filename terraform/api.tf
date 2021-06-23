@@ -29,7 +29,7 @@ module "AuctionsResource" {
     {
       method = "GET"
       type = "AWS_PROXY", # Optionally override lambda integration type, defaults to "AWS_PROXY"
-      invoke_arn = module.GetAuctionsListLambda.this_lambda_function_invoke_arn
+      invoke_arn = module.GetAuctionsListLambda.lambda_function_invoke_arn
     }
   ]
 }
@@ -44,7 +44,7 @@ module "AuctionResource" {
     {
       method = "PUT"
       type = "AWS_PROXY" # Optionally override lambda integration type, defaults to "AWS_PROXY"
-      invoke_arn = module.AddAuctionLambda.this_lambda_function_invoke_arn
+      invoke_arn = module.AddAuctionLambda.lambda_function_invoke_arn
     }
   ]
 }
@@ -59,7 +59,7 @@ module "IdResource" {
     {
       method = "GET"
       type = "AWS_PROXY", # Optionally override lambda integration type, defaults to "AWS_PROXY"
-      invoke_arn = module.GetAuctionLambda.this_lambda_function_invoke_arn
+      invoke_arn = module.GetAuctionLambda.lambda_function_invoke_arn
     }
   ]
 }
@@ -83,7 +83,7 @@ module "UrlResource" {
     {
       method = "GET"
       type = "AWS_PROXY", # Optionally override lambda integration type, defaults to "AWS_PROXY"
-      invoke_arn = module.GetImgUrlLambda.this_lambda_function_invoke_arn
+      invoke_arn = module.GetImgUrlLambda.lambda_function_invoke_arn
     }
   ]
 }
@@ -98,7 +98,7 @@ module "BidResource" {
     {
       method = "PUT"
       type = "AWS_PROXY", # Optionally override lambda integration type, defaults to "AWS_PROXY"
-      invoke_arn = module.BidLambda.this_lambda_function_invoke_arn
+      invoke_arn = module.BidLambda.lambda_function_invoke_arn
     }
   ]
 }
