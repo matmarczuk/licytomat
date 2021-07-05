@@ -101,7 +101,7 @@ export default {
 
       },
       get_preasign_image_url : function (event) {
-        return Vue.axios.get('https://4twxv4ljuc.execute-api.eu-west-1.amazonaws.com/test/image/url')
+        return Vue.axios.get(API_ADDR + '/image/url')
         .then((resp)=>{
             console.log("to jest w środku" + resp.data.body);
         })

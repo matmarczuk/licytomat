@@ -15,3 +15,9 @@ resource "aws_s3_bucket" "website_bucket" {
     error_document = "error.html"
   }
 }
+
+resource "aws_s3_bucket_object" "photos_dir" {
+    bucket  = aws_s3_bucket.website_bucket.id
+    key     =  "photos/"
+    content_type = "application/x-directory"
+}
